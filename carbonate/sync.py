@@ -34,7 +34,7 @@ def sync_from_remote(sync_file, remote, staging, rsync_options):
             sys.stdout.write(l)
             sys.stdout.flush()
     except subprocess.CalledProcessError as e:
-        logging.warning("Failed to sync from %s! %s" % (remote, e))
+        logging.warning(f"Failed to sync from {remote}! {e}")
 
 
 def sync_batch(metrics_to_heal, lock_writes=False, overwrite=False):
@@ -85,10 +85,10 @@ def heal_metric(source, dest, start_time=0, end_time=None, overwrite=False,
             except CorruptWhisperFile as e:
                 if e.path == source:
                     # The source file is corrupt, we bail
-                    logging.warning("Source file corrupt, skipping: %s" % source)
+                    logging.warning(f"Source file corrupt, skipping: {source}")
                 else:
                     # Do it the old fashioned way...possible data loss
-                    logging.warning("Overwriting corrupt file: %s" % dest)
+                    logging.warning(f"Overwriting corrupt file: {dest}")
                     try:
                         os.makedirs(os.path.dirname(dest))
                     except os.error:
@@ -97,13 +97,13 @@ def heal_metric(source, dest, start_time=0, end_time=None, overwrite=False,
                         # Make a backup of corrupt file
                         corrupt = dest + ".corrupt"
                         shutil.copyfile(dest, corrupt)
-                        logging.warning("Corrupt file saved as %s" % corrupt)
+                        logging.warning(f"Corrupt file saved as {corrupt}")
                         shutil.copyfile(source, dest)
                     except IOError as e:
-                        logging.warning("Failed to copy %s! %s" % (dest, e))
+                        logging.warning(f"Failed to copy {dest}! {e}")
             except Exception as e:
-                logging.warning("Exception during heal: %s" % str(e))
-                logging.warning("Skipping heal: %s => %s" % (source, dest))
+                logging.warning(f"Exception during heal: {str(e)}")
+                logging.warning(f"Skipping heal: {source} => {dest}")
     except IOError:
         try:
             os.makedirs(os.path.dirname(dest))
@@ -112,7 +112,7 @@ def heal_metric(source, dest, start_time=0, end_time=None, overwrite=False,
         try:
             shutil.copyfile(source, dest)
         except IOError as e:
-            logging.warning("Failed to copy {}! {}".format(dest, e))
+            logging.warning(f"Failed to copy {dest}! {e}")
 
 
 def run_batch(metrics_to_sync, remote, local_storage, rsync_options,
@@ -122,11 +122,11 @@ def run_batch(metrics_to_sync, remote, local_storage, rsync_options,
 
     metrics_to_heal = []
 
-    staging = "{}/".format(staging_dir)
+    staging = f"{staging_dir}/"
 
     for metric in metrics_to_sync:
-        staging_file = "{}/{}".format(staging_dir, metric)
-        local_file = "{}/{}".format(local_storage, metric)
+        staging_file = f"{staging_dir}/{metric}"
+        local_file = f"{local_storage}/{metric}"
         metrics_to_heal.append((staging_file, local_file))
 
     sync_file.write("\n".join(metrics_to_sync))
@@ -143,16 +143,16 @@ def run_batch(metrics_to_sync, remote, local_storage, rsync_options,
 
     total_time = rsync_elapsed + merge_elapsed
 
-    print('''
+    print(f'''
         --------------------------------------"
-        Rsync time: {}s
-        Merge time: {}s
-        Total time: {}s
-    '''.format(rsync_elapsed, merge_elapsed, total_time))
+        Rsync time: {rsync_elapsed}s
+        Merge time: {merge_elapsed}s
+        Total time: {total_time}s
+    ''')
 
     # Cleanup
     if dirty:
-        print("    dirty mode: left temporary directory {}".format(staging_dir))
+        print(f"    dirty mode: left temporary directory {staging_dir}")
     else:
         rmtree(staging_dir)
 
