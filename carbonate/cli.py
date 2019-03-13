@@ -197,7 +197,7 @@ def carbon_sync():
 
     user = config.ssh_user(args.cluster)
     remote_ip = args.source_node
-    remote = "%s@%s:%s/" % (user, remote_ip, args.source_storage_dir)
+    remote = f"{user}@{remote_ip}:{args.source_storage_dir}/"
 
     whisper_lock_writes = config.whisper_lock_writes(args.cluster) or \
         args.lock
@@ -217,7 +217,7 @@ def carbon_sync():
         metrics_to_sync.append(mpath)
 
         if total_metrics % batch_size == 0:
-            print("* Running batch {}-{}".format(total_metrics - batch_size + 1, total_metrics))
+            print(f"* Running batch {total_metrics - batch_size + 1}-{total_metrics}")
             run_batch(metrics_to_sync, remote,
                       args.storage_dir, args.rsync_options,
                       remote_ip, args.dirty, lock_writes=whisper_lock_writes,
@@ -225,20 +225,20 @@ def carbon_sync():
             metrics_to_sync = []
 
     if len(metrics_to_sync) > 0:
-        print("* Running batch {}-{}".format(total_metrics - len(metrics_to_sync) + 1, total_metrics))
+        print(f"* Running batch {total_metrics - len(metrics_to_sync) + 1}-{total_metrics}")
         run_batch(metrics_to_sync, remote,
                   args.storage_dir, args.rsync_options,
                   remote_ip, args.dirty, lock_writes=whisper_lock_writes)
 
     elapsed = (time() - start)
 
-    print('''
+    print(f'''
     
     * Sync Report
       ========================================
-      Total metrics synced: {}
-      Total time: {}s
-    '''.format(total_metrics, elapsed))
+      Total metrics synced: {total_metrics}
+      Total time: {elapsed}s
+    ''')
 
 
 def carbon_path():
@@ -373,10 +373,9 @@ def whisper_aggregate():
                 path = metric_to_fs(name, prepend=args.storage_dir)
                 metrics_count = metrics_count + setAggregation(path, mode)
         except ValueError as exc:
-            logging.warning("Unable to parse '{}' ({})".format(metric, str(exc)))
+            logging.warning(f"Unable to parse '{metric}' ({str(exc)})")
 
-    logging.info('Successfully set aggregation mode for ' +
-                 '%d of %d metrics' % (metrics_count, len(metrics)))
+    logging.info(f'Successfully set aggregation mode for {metrics_count:d} of {len(metrics):d} metrics')
 
 
 def whisper_fill():
