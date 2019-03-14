@@ -1,9 +1,9 @@
 import os
 import re
-from carbonate import __version__
 from setuptools import setup, find_packages
 from setuptools.command.install_scripts import install_scripts
 
+VERSION="1.1.5"
 
 class my_install_scripts(install_scripts):
   def write_script(self, script_name, contents, mode="t", *ignored):
@@ -18,9 +18,9 @@ def read(fname):
 
 setup(
     name="carbonate3",
-    version=__version__,
-    author="Alex Klimenka",
-    author_email="nimda7@gmail.com",
+    version=VERSION,
+    maintainer="Alex Klimenka",
+    maintainer_email="nimda7@gmail.com",
     description="Tools for managing federated carbon clusters.",
     license="MIT",
     keywords="graphite carbon",

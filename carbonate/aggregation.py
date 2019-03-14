@@ -17,7 +17,7 @@ AGGREGATION = {
 }
 
 
-def setAggregation(path, mode):
+def set_aggregation(path, mode):
 
     if not mode:
         return 0

@@ -80,7 +80,7 @@ def heal_metric(source, dest, start_time=0, end_time=None, overwrite=False,
                 # fill_archives' start and end are the opposite
                 # of what you'd expect
                 fill_archives(
-                    source, dest, startFrom=end_time, endAt=start_time,
+                    source, dest, start_from=end_time, end_at=start_time,
                     overwrite=overwrite, lock_writes=lock_writes)
             except CorruptWhisperFile as e:
                 if e.path == source:

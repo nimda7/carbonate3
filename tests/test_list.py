@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from carbonate.list import listMetrics
+from carbonate.list import list_metrics
 
 
 class ListTest(unittest.TestCase):
@@ -44,19 +44,19 @@ class ListTest(unittest.TestCase):
             os.symlink( s[0], os.path.join(cls.rootdir, s[1]))
 
     def test_list_withsym(self):
-        res = sorted(list(listMetrics(self.rootdir, True)))
+        res = sorted(list(list_metrics(self.rootdir, True)))
         self.assertEqual(res, self.expected_metrics_withsym)
 
     def test_list_with_trailing_slash_withsym(self):
-        res = sorted(list(listMetrics(self.rootdir + '/', True)))
+        res = sorted(list(list_metrics(self.rootdir + '/', True)))
         self.assertEqual(res, self.expected_metrics_withsym)
 
     def test_list(self):
-        res = sorted(list(listMetrics(self.rootdir)))
+        res = sorted(list(list_metrics(self.rootdir)))
         self.assertEqual(res, self.expected_metrics)
 
     def test_list_with_trailing_slash(self):
-        res = sorted(list(listMetrics(self.rootdir + '/')))
+        res = sorted(list(list_metrics(self.rootdir + '/')))
         self.assertEqual(res, self.expected_metrics)
 
     @classmethod

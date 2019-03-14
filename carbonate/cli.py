@@ -7,11 +7,11 @@ import sys
 from functools import partial
 from time import time
 
-from .aggregation import setAggregation, AGGREGATION
+from .aggregation import set_aggregation, AGGREGATION
 from .fill import fill_archives
-from .list import listMetrics
+from .list import list_metrics
 from .lookup import lookup
-from .sieve import filterMetrics
+from .sieve import filter_metrics
 from .stale import data, stat
 from .sync import run_batch
 from .util import (
@@ -54,7 +54,7 @@ def carbon_list():
     args = parser.parse_args()
 
     try:
-        for m in listMetrics(args.storage_dir, args.follow_sym_links):
+        for m in list_metrics(args.storage_dir, args.follow_sym_links):
             print(m)
     except IOError as e:
         if e.errno == errno.EPIPE:
@@ -128,7 +128,7 @@ def carbon_sieve():
     try:
         for metric in metrics:
             m = metric.strip()
-            for match in filterMetrics([m], match_dests, cluster, invert):
+            for match in filter_metrics([m], match_dests, cluster, invert):
                 print(metric.strip())
     except KeyboardInterrupt:
         sys.exit(1)
@@ -371,7 +371,7 @@ def whisper_aggregate():
             mode = AGGREGATION[t]
             if mode is not None:
                 path = metric_to_fs(name, prepend=args.storage_dir)
-                metrics_count = metrics_count + setAggregation(path, mode)
+                metrics_count = metrics_count + set_aggregation(path, mode)
         except ValueError as exc:
             logging.warning(f"Unable to parse '{metric}' ({str(exc)})")
 
@@ -417,7 +417,7 @@ def whisper_fill():
     if not os.path.isfile(dst):
         raise SystemExit('Destination file not found.')
 
-    startFrom = time()
+    start_from = time()
 
-    fill_archives(src, dst, startFrom, lock_writes=args.lock,
+    fill_archives(src, dst, start_from, lock_writes=args.lock,
                   overwrite=args.overwrite)

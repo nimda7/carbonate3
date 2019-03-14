@@ -48,5 +48,5 @@ class Cluster:
         for d in self.destinations:
             self.ring.addDestination(d)
 
-    def getDestinations(self, metric):
+    def get_destinations(self, metric):
         return self.ring.getDestinations(metric)

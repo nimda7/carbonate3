@@ -9,7 +9,7 @@ except ImportError:
     from scandir import scandir, walk  # noqa # pylint: disable=unused-import
 
 
-def listMetrics(storage_dir, follow_sym_links=False, metric_suffix='wsp'):
+def list_metrics(storage_dir, follow_sym_links=False, metric_suffix='wsp'):
     metric_regex = re.compile(r".*\.%s$" % metric_suffix)
 
     storage_dir = storage_dir.rstrip(os.sep)

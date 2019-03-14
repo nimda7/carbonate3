@@ -22,7 +22,6 @@ try:
 except ImportError:
     HAS_OPERATOR = False
 
-import itertools
 import time
 
 
@@ -45,54 +44,54 @@ def itemgetter(*items):
 def fill(src, dst, tstart, tstop):
     # fetch range start-stop from src, taking values from the highest
     # precision archive, thus optionally requiring multiple fetch + merges
-    srcHeader = whisper.info(src)
+    src_header = whisper.info(src)
 
-    srcArchives = srcHeader['archives']
-    srcArchives.sort(key=itemgetter('retention'))
+    src_archives = src_header['archives']
+    src_archives.sort(key=itemgetter('retention'))
 
     # find oldest point in time, stored by both files
-    srcTime = int(time.time()) - srcHeader['maxRetention']
+    src_time = int(time.time()) - src_header['maxRetention']
 
-    if tstart < srcTime and tstop < srcTime:
+    if tstart < src_time and tstop < src_time:
         return
 
     # we want to retain as much precision as we can, hence we do backwards
     # walk in time
 
     # skip forward at max 'step' points at a time
-    for archive in srcArchives:
+    for archive in src_archives:
         # skip over archives that don't have any data points
         rtime = time.time() - archive['retention']
         if tstop <= rtime:
             continue
 
-        untilTime = tstop
-        fromTime = rtime if rtime > tstart else tstart
+        until_time = tstop
+        from_time = rtime if rtime > tstart else tstart
 
-        (timeInfo, values) = whisper.fetch(src, fromTime, untilTime)
+        (timeInfo, values) = whisper.fetch(src, from_time, until_time)
         (start, end, archive_step) = timeInfo
-        pointsToWrite = list(filter(lambda points: points[1] is not None,
-            zip(range(start, end, archive_step), values)))
+        points_to_write = list(filter(lambda points: points[1] is not None,
+                                      zip(range(start, end, archive_step), values)))
         # order points by timestamp, newest first
-        pointsToWrite.sort(key=lambda p: p[0], reverse=True)
-        whisper.update_many(dst, pointsToWrite)
+        points_to_write.sort(key=lambda p: p[0], reverse=True)
+        whisper.update_many(dst, points_to_write)
 
-        tstop = fromTime
+        tstop = from_time
 
         # can stop when there's nothing to fetch any more
         if tstart == tstop:
             return
 
 
-def fill_archives(src, dst, startFrom, endAt=0, overwrite=False,
+def fill_archives(src, dst, start_from, end_at=0, overwrite=False,
                   lock_writes=False):
     """
     Fills gaps in dst using data from src.
 
     src is the path as a string
     dst is the path as a string
-    startFrom is the latest timestamp (archives are read backward)
-    endAt is the earliest timestamp (archives are read backward).
+    start_from is the latest timestamp (archives are read backward)
+    end_at is the earliest timestamp (archives are read backward).
           if absent, we take the earliest timestamp in the archive
     overwrite will write all non null points from src dst.
     lock using whisper lock if true
@@ -107,11 +106,11 @@ def fill_archives(src, dst, startFrom, endAt=0, overwrite=False,
     archives = sorted(archives, key=lambda t: t['retention'])
 
     for archive in archives:
-        fromTime = max(endAt, time.time() - archive['retention'])
-        if fromTime >= startFrom:
+        from_time = max(end_at, time.time() - archive['retention'])
+        if from_time >= start_from:
             continue
 
-        (timeInfo, values) = whisper.fetch(dst, fromTime, untilTime=startFrom)
+        (timeInfo, values) = whisper.fetch(dst, from_time, untilTime=start_from)
         (start, end, step) = timeInfo
         gapstart = None
         for value in values:
@@ -129,4 +128,4 @@ def fill_archives(src, dst, startFrom, endAt=0, overwrite=False,
 
         # The next archive only needs to be filled up to the latest point
         # in time we updated.
-        startFrom = fromTime
+        start_from = from_time

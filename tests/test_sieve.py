@@ -37,19 +37,19 @@ class FilterTest(unittest.TestCase):
                   'metric.106',
                   'metric.109']
 
-        f = list(carbonate.sieve.filterMetrics(inputs, node, self.cluster))
+        f = list(carbonate.sieve.filter_metrics(inputs, node, self.cluster))
         self.assertEqual(f, output)
-        f = list(carbonate.sieve.filterMetrics(inputs, node_long, self.cluster))
+        f = list(carbonate.sieve.filter_metrics(inputs, node_long, self.cluster))
         self.assertEqual(f, output)
 
-        f = list(carbonate.sieve.filterMetrics(inputs, node2, self.cluster))
+        f = list(carbonate.sieve.filter_metrics(inputs, node2, self.cluster))
         self.assertEqual(f, output2)
-        f = list(carbonate.sieve.filterMetrics(inputs, node2_long, self.cluster))
-        self.assertEqual(f, output2)
-
-        f = list(carbonate.sieve.filterMetrics(inputs, node, self.cluster, True))
+        f = list(carbonate.sieve.filter_metrics(inputs, node2_long, self.cluster))
         self.assertEqual(f, output2)
 
-        f = list(carbonate.sieve.filterMetrics(inputs, node2, self.cluster, True))
+        f = list(carbonate.sieve.filter_metrics(inputs, node, self.cluster, True))
+        self.assertEqual(f, output2)
+
+        f = list(carbonate.sieve.filter_metrics(inputs, node2, self.cluster, True))
         self.assertEqual(f, output)
 

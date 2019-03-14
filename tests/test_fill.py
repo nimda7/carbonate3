@@ -180,7 +180,7 @@ class FillTest(unittest.TestCase):
         self.assertEqual(expected, half_filled_data)
 
         # Explicitly passes the default value of endAt=now (excluded)
-        fill_archives(self.db, dst_db, time.time(), endAt=0)
+        fill_archives(self.db, dst_db, time.time(), end_at=0)
         filled_data = whisper.fetch(dst_db, start-seconds_per_point)[1]
         self.assertEqual(complete[:-1], filled_data[:-1])
         self.assertEqual(filled_data[-1], None)
