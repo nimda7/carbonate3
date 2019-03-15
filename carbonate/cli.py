@@ -99,12 +99,12 @@ def carbon_sieve():
     parser.add_argument(
         '-f', '--metrics-file',
         default='-',
-        help='File containing metric names to filter, or \'-\' ' +
-             'to read from STDIN')
+        help="File containing metric names to filter, or '-' "
+             "to read from STDIN")
 
     parser.add_argument(
         '-n', '--node',
-        help='Filter for metrics belonging to this node. Uses the local ' +
+        help='Filter for metrics belonging to this node. Uses the local '
              'addresses if not provided.')
 
     parser.add_argument(
@@ -142,8 +142,8 @@ def carbon_sync():
     parser.add_argument(
         '-f', '--metrics-file',
         default='-',
-        help='File containing metric names to filter, or \'-\' ' +
-             'to read from STDIN')
+        help="File containing metric names to filter, or '-' "
+             "to read from STDIN")
 
     parser.add_argument(
         '-s', '--source-node',
@@ -168,8 +168,8 @@ def carbon_sync():
     parser.add_argument(
         '--rsync-options',
         default='-azpS',
-        help='Pass option(s) to rsync. Make sure to use ' +
-             '"--rsync-options=" if option starts with \'-\'')
+        help="Pass option(s) to rsync. Make sure to use "
+             "'--rsync-options=' if option starts with '-'")
 
     parser.add_argument(
         '--dirty',
@@ -233,7 +233,7 @@ def carbon_sync():
     elapsed = (time() - start)
 
     print(f'''
-    
+
     * Sync Report
       ========================================
       Total metrics synced: {total_metrics}
@@ -251,8 +251,8 @@ def carbon_path():
     parser.add_argument(
         '-f', '--metrics-file',
         default='-',
-        help='File containing metric names to transform to file paths, or ' +
-             '\'-\' to read from STDIN')
+        help="File containing metric names to transform to file paths, or "
+             "'-' to read from STDIN")
 
     parser.add_argument(
         '-r', '--reverse',
@@ -295,8 +295,8 @@ def carbon_stale():
     parser.add_argument(
         '-f', '--metrics-file',
         default='-',
-        help='File containing metric names to scan for staleness, or ' +
-             '\'-\' to read from STDIN')
+        help="File containing metric names to scan for staleness, or "
+             "'-' to read from STDIN")
 
     parser.add_argument(
         '-r', '--reverse',
@@ -341,15 +341,15 @@ def carbon_stale():
 
 def whisper_aggregate():
     parser = argparse.ArgumentParser(
-        description='Set aggregation for whisper-backed metrics this carbon ' +
+        description='Set aggregation for whisper-backed metrics this carbon '
                     'instance contains',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(
         '-f', '--metrics-file',
         default='-',
-        help='File containing metric names and aggregation modes, or \'-\' ' +
-             'to read from STDIN')
+        help="File containing metric names and aggregation modes, or '-' "
+             "to read from STDIN")
 
     parser.add_argument(
         '-d', '--storage-dir',
@@ -375,7 +375,8 @@ def whisper_aggregate():
         except ValueError as exc:
             logging.warning(f"Unable to parse '{metric}' ({str(exc)})")
 
-    logging.info(f'Successfully set aggregation mode for {metrics_count:d} of {len(metrics):d} metrics')
+    logging.info(f'Successfully set aggregation mode for'
+                 ' {metrics_count:d} of {len(metrics):d} metrics')
 
 
 def whisper_fill():
