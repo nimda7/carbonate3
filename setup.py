@@ -3,7 +3,7 @@ import re
 from setuptools import setup, find_packages
 from setuptools.command.install_scripts import install_scripts
 
-VERSION="1.1.5"
+VERSION="1.1.5.dev1"
 
 class my_install_scripts(install_scripts):
   def write_script(self, script_name, contents, mode="t", *ignored):
@@ -32,7 +32,7 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
-        'Intended Audience :: Developers,DevOps, System Administrators',
+        'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
