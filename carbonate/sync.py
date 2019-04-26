@@ -129,7 +129,7 @@ def run_batch(metrics_to_sync, remote, local_storage, rsync_options,
         local_file = f"{local_storage}/{metric}"
         metrics_to_heal.append((staging_file, local_file))
 
-    sync_file.write("\n".join(metrics_to_sync))
+    sync_file.write("\n".join(metrics_to_sync).encode())
     sync_file.flush()
 
     rsync_start = time()
